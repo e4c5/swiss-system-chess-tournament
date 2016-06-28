@@ -11,7 +11,7 @@ def forwards(apps, schema_editor):
             CREATE VIEW tournaments_tournament_player_score AS
             SELECT CONCAT(tournaments_round.tournament_id, ':', player_score.player_id) as id, 
                 tournaments_round.tournament_id, player_score.player_id, SUM(player_score.score) as score,
-                player.name, player.rating, 
+                player.name, player.rating, player.fide_title,
                 case player.fide_title
                     when "GM"  then 8
                     when "IM"  then 7
@@ -36,7 +36,7 @@ def forwards(apps, schema_editor):
             CREATE VIEW tournaments_tournament_player_score AS
             SELECT tournaments_round.tournament_id || ':' || player_score.player_id as id, 
                 tournaments_round.tournament_id, player_score.player_id, SUM(player_score.score) as score,
-                player.name, player.rating, 
+                player.name, player.rating, player.fide_title,
                 case player.fide_title
                     when "GM"  then 8
                     when "IM"  then 7
@@ -59,7 +59,7 @@ def forwards(apps, schema_editor):
         connection.cursor().execute(query);
 
 def backwards(apps, schema_editor):
-    connections.execute("""  DROP VIEW tournaments_tournament_player_score; """)
+    connection.cursor().execute("""  DROP VIEW tournaments_tournament_player_score; """)
 
 
 class Migration(migrations.Migration):
